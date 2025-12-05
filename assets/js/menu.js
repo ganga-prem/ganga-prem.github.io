@@ -100,14 +100,21 @@ function generateHeader() {
 // Initialize menu immediately (before main.js runs)
 // This must run synchronously so main.js can properly wrap the menu content
 (function() {
-    // Wait for DOM to have the menu element
+    // Try to find and populate the menu element
     if (document.getElementById('menu')) {
         generateMenu();
-    } else {
-        // If DOM not ready yet, wait for it
+        return;
+    }
+    
+    // If DOM is still loading, wait for DOMContentLoaded
+    if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             generateMenu();
         });
+    } else {
+        // DOM is already loaded but #menu not found
+        // This shouldn't happen if HTML is correct, but log a warning
+        console.warn('Menu element (#menu) not found and DOM already loaded. Menu will not be generated.');
     }
 })();
 
